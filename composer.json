@@ -1,0 +1,23 @@
+{
+    "name": "promo-code/laravel-schema-helper",
+    "license": "MIT",
+    "description": "Laravel-based helper for migrations",
+    "authors": [
+        {
+            "name": "Michael Kelly",
+            "email": "mkelly@newmediaretailer.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PromoCode\\LaravelSchemaHelper\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {},
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "laravel/framework": "^5.8"
+    }
+}
