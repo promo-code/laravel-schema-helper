@@ -40,6 +40,37 @@ class LaravelSchemaHelper
         }
     }
 
+    public static function enumValues(
+        string $table,
+        string $column,
+        Connection $db = null
+    ): array
+    {
+        if (null === $db) {
+            /** @var \Illuminate\Database\Connection $db */
+            $db = app('db')->connection();
+        }
+        
+        if (self::isSqlite($db)) {
+            return [];
+        }
+
+        $data = $db->select('
+                SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = :table AND COLUMN_NAME = :column
+            ',
+            [':table' => $table, ':column' => $column]
+        );
+
+        $values = str_replace(
+            ["enum('", "')", "','"],
+            [''      , ''  , ','  ],
+            $data[0]->COLUMN_TYPE
+        );
+
+        return explode(',', $values);
+    }
+
     public static function isMysql(Connection $db = null): bool
     {
         if (null === $db) {
