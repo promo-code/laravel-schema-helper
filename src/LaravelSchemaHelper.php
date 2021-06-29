@@ -41,6 +41,7 @@ class LaravelSchemaHelper
     }
 
     public static function enumValues(
+        string $schema,
         string $table,
         string $column,
         Connection $db = null
@@ -50,16 +51,18 @@ class LaravelSchemaHelper
             /** @var \Illuminate\Database\Connection $db */
             $db = app('db')->connection();
         }
-        
+
         if (self::isSqlite($db)) {
             return [];
         }
 
         $data = $db->select('
                 SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS 
-                WHERE TABLE_NAME = :table AND COLUMN_NAME = :column
+                WHERE TABLE_SCHEMA = :schema 
+                AND TABLE_NAME = :table
+                AND COLUMN_NAME = :column
             ',
-            [':table' => $table, ':column' => $column]
+            [':schema' => $schema, ':table' => $table, ':column' => $column]
         );
 
         $values = str_replace(
